@@ -21,11 +21,11 @@ class User(BaseModel):
 		return email
 
 	def __repr__(self):
-	    return '<Superhero {}>'.format(self.superhero_alias) 
+	    return '<User {}>'.format(self.username) 
 
 	def __json__(self):
 		json = super().__json__()
-		json.update({'username': self.superhero_alias,
+		json.update({'username': self.username,
 					'email_address': self.email_address or '--',
 					'first_name': self.first_name,
 					'last_name': self.last_name or '--',

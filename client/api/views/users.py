@@ -11,7 +11,7 @@ from client.api import APIException
 users_blueprint = Blueprint('users', __name__)
 
 @users_blueprint.route('/users/<int:user_id>', methods=['GET'])
-def get_user(hero_id):
+def get_user(user_id):
     try:
     	result = User.query.get(user_id).__json__()
     except AttributeError as e:

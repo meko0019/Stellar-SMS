@@ -8,14 +8,13 @@ from flask_migrate import Migrate
 
 
 
-def create_app(settings= None):
+def create_app(settings=None):
     """Application factory with optional overridable settings.
     """
     if settings is None: 
         settings = {}
 
     app = flask.Flask(__name__)
-
 
     if settings.get("DEBUG", False) or os.environ.get("DEBUG", False):
         app.config.from_object("config.DevelopmentConfig")
