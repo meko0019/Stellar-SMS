@@ -1,7 +1,5 @@
-import multiprocessing
 import os
 import sys
-import typing
 
 from flask_migrate import Migrate
 from flask_migrate import MigrateCommand
@@ -52,7 +50,7 @@ def main():
             return system("psql -h postgres -U postgres -w postgres")
 
 
-def system(command: str) -> int:
+def system(command):
     print(f"+ {command}")
     return os.system(command)
 
