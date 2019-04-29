@@ -15,7 +15,7 @@ class User(BaseModel):
 		if not email:
 			return
 
-		if not re.match("[^@]+@[^@]+\.[^@]+", email):
+		if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
 			raise AssertionError('Provided email is not a valid email address')
 
 		return email
