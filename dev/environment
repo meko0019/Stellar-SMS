@@ -1,0 +1,4 @@
+DEBUG=true
+DATABASE_URL=postgresql://postgres@postgres:5432/stellar
+REDIS_URL=redis://redis:6379/0
+PYTHONDONTWRITEBYTECODE=1
