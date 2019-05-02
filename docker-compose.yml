@@ -12,10 +12,14 @@ services:
       - postgres
   postgres:
     image: postgres:11.2
-    environment:
-      - POSTGRES_DB=stellar
     ports:
-        - 5432:5432
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=stellar
   federation:
     image: web
-    command: "./federation/federation"
+    command: "./federation_"
+    depends_on: 
+      - postgres
