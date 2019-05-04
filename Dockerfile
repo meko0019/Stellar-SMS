@@ -6,7 +6,8 @@ WORKDIR /stellar-SMS
 # Python dependencies
 COPY requirements.txt .
 
-RUN pip install --upgrade pip &&\ 
+RUN apt-get update && apt-get install -y postgresql postgresql-client &&\
+	pip install --upgrade pip &&\ 
     pip install -r requirements.txt 
 
 # Copy over the rest of the project

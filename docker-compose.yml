@@ -3,7 +3,7 @@ services:
   web:
     build: .
     image: web
-    command: "gunicorn -c gunicorn.conf.py client.wsgi:app"
+    command: "gunicorn -c gunicorn.conf.py client.wsgi:app --reload"
     ports:
       - 8000:8000
     volumes:
@@ -21,5 +21,7 @@ services:
   federation:
     image: web
     command: "./federation_"
+    ports: 
+      - 8002:8002
     depends_on: 
       - postgres

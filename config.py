@@ -1,6 +1,6 @@
 import os
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://localhost:5432/stellar")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://user:password@localhost:5432/stellar")
 
 class BaseConfig(object):
     HOST = "127.0.0.1"
