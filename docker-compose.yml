@@ -16,6 +16,9 @@ services:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=stellar
+    volumes:
+      - db_volume:/var/lib/postgresql
+
   federation:
     image: web
     command: "./federation_"
@@ -23,3 +26,5 @@ services:
       - 8002:8002
     depends_on: 
       - postgres
+volumes:
+  db_volume:
