@@ -35,7 +35,12 @@ def create_app(settings=None):
         c_logger = logging.getLogger("client")
         c_logger.setLevel(logging.DEBUG)
 
+    from client import index_blueprint
+    from client.api.views import api_blueprint
     from client.api.views.users import users_blueprint
+
     app.register_blueprint(users_blueprint)
+    app.register_blueprint(index_blueprint)
+    app.register_blueprint(api_blueprint)
 
     return app

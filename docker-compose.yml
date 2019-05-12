@@ -3,7 +3,7 @@ services:
   web:
     build: .
     image: web
-    command: "gunicorn -c gunicorn.conf.py client.wsgi:app --reload"
+    command: "gunicorn -c gunicorn.conf.py client.wsgi:app"
     ports:
       - 8000:8000
     volumes:

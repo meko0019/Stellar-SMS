@@ -44,9 +44,3 @@ def create_user():
 	return f"{result} - {result.id}", 201
 
 
-@users_blueprint.route('/api/health', methods=['GET'])
-def health():
-
-	return "I'm up! :)", 201
-
-
