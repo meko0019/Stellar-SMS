@@ -18,13 +18,5 @@ services:
       - POSTGRES_DB=stellar
     volumes:
       - db_volume:/var/lib/postgresql
-
-  federation:
-    image: web
-    command: "./federation_"
-    ports: 
-      - 8002:8002
-    depends_on: 
-      - postgres
 volumes:
   db_volume:
