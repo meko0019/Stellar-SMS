@@ -1,8 +1,7 @@
 import os
 import sys
 
-from flask_migrate import Migrate
-from flask_migrate import MigrateCommand
+from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
 base_dir = os.path.dirname(os.path.abspath(__file__))

@@ -38,6 +38,7 @@ def create_app(settings=None):
     from client import index_blueprint
     from client.api.views import api_blueprint
     from client.api.views.users import users_blueprint
+    from client.api.views.messages import msgs_blueprint
 
     app.register_blueprint(users_blueprint)
     app.register_blueprint(index_blueprint)
