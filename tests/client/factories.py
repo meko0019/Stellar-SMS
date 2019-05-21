@@ -25,7 +25,7 @@ class UserFactory(BaseModelFactory):
     class Meta:
         model = User
 
-    username = factory.Faker('username')
+    username = factory.Sequence(lambda n: 'user%d' % n)
     email_address = factory.Faker('email')
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')

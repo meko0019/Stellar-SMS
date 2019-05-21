@@ -1,13 +1,16 @@
-from client.database import db, BaseModel, UTCNOW, isofmt_date
-from client.users.models import User
 from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey
+
+from client.database import db, BaseModel, UTCNOW, isofmt_date
+
 
 class Message(BaseModel):
 	__tablename__ = 'messages'
 
 	msg_id = db.Column(db.String(64), index=True, nullable=False, unique=True)
 	body = db.Column(db.String(128), index=True)
-	sender = relationship(User, back_populates="messages")
+	user_id = db.Column(db.Integer, ForeignKey('users.id'))
+	sender = relationship('User')
 	unread = db.Column(db.Boolean(), server_default='true')
 	time_created = db.Column(db.Date(), server_default=UTCNOW(), index=True)
 	recieved_at = db.Column(db.Date(), index=True)

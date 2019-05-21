@@ -2,7 +2,7 @@ import json
 from flask import request, Blueprint
 
 from client.database import db
-
+from client.messages.models import Message
 
 msgs_blueprint = Blueprint('messages', __name__, url_prefix='/api/messages')
 
