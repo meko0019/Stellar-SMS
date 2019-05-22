@@ -1,12 +1,22 @@
-FROM python:3.7
+FROM python:3.7-alpine
 
 WORKDIR /stellar-SMS
 
 # Copy the requirements file in order to install
 # Python dependencies
 COPY requirements.txt .
-
-RUN apt-get update && apt-get install -y postgresql postgresql-client &&\
+RUN apk update && \
+	apk add --no-cache \
+	    build-base \
+	    python3-dev \
+	    curl \
+	    git \
+	    gcc \
+	    libstdc++ \
+	    musl-dev \
+	    libffi-dev \
+	    postgresql-dev \
+	    postgresql-client &&\
 	pip install --upgrade pip &&\ 
     pip install -r requirements.txt 
 

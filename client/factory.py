@@ -1,12 +1,17 @@
 import os
+import logging 
 
+from celery import Celery
 import flask
+from flask_migrate import Migrate
 
 from client.database import db
 
-from flask_migrate import Migrate
 
 
+celery = Celery(
+    __name__, broker=os.environ.get("AMQP_URL"), backend=os.environ.get("REDIS_URL")
+)
 
 def create_app(settings=None):
     """Application factory with optional overridable settings.
@@ -22,6 +27,19 @@ def create_app(settings=None):
         app.config.from_object("config.ProductionConfig")
 
     app.config.from_mapping(settings)
+
+    celery.conf.update(app.config)
+
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+
+    celery.Task = ContextTask
 
     # Initialize the database with the application.
     db.init_app(app)
