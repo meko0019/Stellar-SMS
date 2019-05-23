@@ -13,7 +13,7 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CELERY_BACKEND_URL = REDIS_URL
-    CELERY_BROKER_URL = AMQP_URL
+    CELERY_BROKER_URL = REDIS_URL
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True

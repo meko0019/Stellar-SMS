@@ -10,7 +10,7 @@ from client.database import db
 
 
 celery = Celery(
-    __name__, broker=os.environ.get("AMQP_URL"), backend=os.environ.get("REDIS_URL")
+    __name__, broker=os.environ.get("REDIS_URL"), backend=os.environ.get("REDIS_URL")
 )
 
 def create_app(settings=None):
@@ -29,6 +29,7 @@ def create_app(settings=None):
     app.config.from_mapping(settings)
 
     celery.conf.update(app.config)
+    celery.conf.broker_heartbeat = 0
 
     TaskBase = celery.Task
 

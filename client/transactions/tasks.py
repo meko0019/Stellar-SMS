@@ -14,3 +14,8 @@ def send_payment(tx):
 
 def process_tx():
 	pass
+
+
+@celery.task
+def add(x,y):
+	return x+y

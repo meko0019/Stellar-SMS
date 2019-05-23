@@ -1,7 +1,5 @@
 version: '3'
 services:
-  rabbitmq:
-    image: rabbitmq:latest
   redis:
     image: redis:latest
   web:
@@ -31,7 +29,6 @@ services:
       - env
     depends_on: 
       - redis
-      - rabbitmq
       - postgres
 
 volumes:

@@ -12,9 +12,7 @@ RUN apk update && \
 	    curl \
 	    git \
 	    gcc \
-	    libstdc++ \
 	    musl-dev \
-	    libffi-dev \
 	    postgresql-dev \
 	    postgresql-client &&\
 	pip install --upgrade pip &&\ 
