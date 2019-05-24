@@ -45,8 +45,6 @@ def create_app(settings=None):
     # Initialize the database with the application.
     db.init_app(app)
 
-    migrate = Migrate(app, db)
-
     if app.config.get("DEBUG"):
         db_logger = logging.getLogger("sqlalchemy.engine")
         db_logger.setLevel(logging.INFO)
@@ -63,4 +61,6 @@ def create_app(settings=None):
     app.register_blueprint(index_blueprint)
     app.register_blueprint(api_blueprint)
 
+    from client.transactions import tasks 
+    
     return app
