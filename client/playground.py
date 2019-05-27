@@ -1,5 +1,9 @@
-from stellar_base.keypair import Keypair
+import string, random
+
 import requests
+
+from stellar_base.keypair import Keypair
+
 
 def create_account():
 	keypair = Keypair.random()
@@ -19,4 +23,13 @@ def send_money(send_from=None, send_to=None):
 def recieve_money():
 	pass
 
+
+def create_session():
+	pass
+
+def add_tx_to_session(conn, tx):
+	pass
+
+def retrieve_tx_from_session(conn, tx):
+	pass
 

@@ -7,7 +7,7 @@ class User(BaseModel):
 	__tablename__ = 'users'
 	username = db.Column(db.String(64), index=True, nullable=False, unique=True)
 	email_address = db.Column(db.String(120), index=True, nullable=True, unique=True)
-	phone_number = db.Column(db.String(32), index=True)
+	phone_number = db.Column(db.String(32), index=True, unique=True)
 	first_name = db.Column(db.String(64), index=True, nullable=False)
 	last_name = db.Column(db.String(64), index=True, nullable=True)
 	joined = db.Column(db.Date(), server_default=UTCNOW(), index=True)
