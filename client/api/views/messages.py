@@ -1,6 +1,7 @@
 import json
 from flask import request, Blueprint
 
+from client.log import c_logger as log
 from client.database import db
 from client.messages.models import Message
 from client.messages.utils import sms_handler
@@ -9,13 +10,14 @@ msgs_blueprint = Blueprint('messages', __name__, url_prefix='/api/messages')
 
 @msgs_blueprint.route('/sms', methods=['GET', 'POST'])
 def incoming_sms():
-    resp_body = sms_handler(request.values)
-    # Start our TwiML response
-    resp = MessagingResponse()
+    # resp_body = sms_handler(request.values)
+    # # Start our TwiML response
+    # resp = MessagingResponse()
 
-    resp.message(resp_body)
-
-    return str(resp)
+    # resp.message(resp_body)
+    log.debug(type(request.values))
+    log.debug(request.values)
+    return str('resp')
 
 @msgs_blueprint.route('/', methods=['POST'])
 def create_msg():

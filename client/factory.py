@@ -3,7 +3,6 @@ import logging
 
 from celery import Celery
 import flask
-from flask_migrate import Migrate
 
 from client.database import db
 
@@ -29,7 +28,6 @@ def create_app(settings=None):
     app.config.from_mapping(settings)
 
     celery.conf.update(app.config)
-    celery.conf.broker_heartbeat = 0
 
     TaskBase = celery.Task
 
@@ -44,6 +42,11 @@ def create_app(settings=None):
 
     # Initialize the database with the application.
     db.init_app(app)
+
+    gunicorn_logger = logging.getLogger("gunicorn.error")
+    root_logger = logging.getLogger("")
+    root_logger.handlers = gunicorn_logger.handlers
+    root_logger.setLevel(gunicorn_logger.level)
 
     if app.config.get("DEBUG"):
         db_logger = logging.getLogger("sqlalchemy.engine")
@@ -60,7 +63,8 @@ def create_app(settings=None):
     app.register_blueprint(users_blueprint)
     app.register_blueprint(index_blueprint)
     app.register_blueprint(api_blueprint)
+    app.register_blueprint(msgs_blueprint)
 
     from client.transactions import tasks 
-    
+
     return app

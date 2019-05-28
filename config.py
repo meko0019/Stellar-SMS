@@ -7,7 +7,7 @@ AMQP_URL = os.environ.get("AMQP_URL", "amqp://localhost:5672")
 
 class BaseConfig(object):
     HOST = "127.0.0.1"
-    PORT = 8080
+    PORT = 8000
 
     SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False

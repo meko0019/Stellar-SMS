@@ -3,6 +3,8 @@ import os
 
 debug = os.environ.get("DEBUG", False)
 
+loglevel = 'debug' if debug else 'info'
+
 # Settings from http://docs.gunicorn.org/en/stable/settings.html#settings
 port = int(os.environ.get("PORT", "8000"))
 bind = f"0.0.0.0:{port}"
