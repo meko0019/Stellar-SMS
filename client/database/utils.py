@@ -21,5 +21,3 @@ def delete_all_rows(app):
             db.session.commit()
         except ResourceClosedError:
             pass
-
-

@@ -10,7 +10,6 @@ from sqlalchemy.sql import text
 from sqlalchemy.types import DateTime
 
 
-
 __all__ = [
     "db",
     "DATETIME_FORMAT",
@@ -33,15 +32,18 @@ NULL = text("NULL")
 FALSE = text("false")
 TRUE = text("true")
 
+
 def isofmt(dt):
     if dt is None:
         return None
     return dt.strftime(DATETIME_FORMAT)
 
+
 def isofmt_date(date):
-	if date is None:
-		return None
-	return date.strftime(DATE_FORMAT)
+    if date is None:
+        return None
+    return date.strftime(DATE_FORMAT)
+
 
 def isoparse(dt):
     if dt is None:
@@ -83,11 +85,7 @@ def execute_query(query):
     try:
         result = str(db.session.execute(query).fetchall())
     except Exception as e:
-        #TODO:
+        # TODO:
         return str([])
 
     return result
-
-
-
-

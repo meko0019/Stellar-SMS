@@ -1,5 +1,5 @@
 import os
-import logging 
+import logging
 
 from celery import Celery
 import flask
@@ -7,22 +7,22 @@ import flask
 from client.database import db
 
 
-
 celery = Celery(
     __name__, broker=os.environ.get("REDIS_URL"), backend=os.environ.get("REDIS_URL")
 )
 
+
 def create_app(settings=None):
     """Application factory with optional overridable settings.
     """
-    if settings is None: 
+    if settings is None:
         settings = {}
 
     app = flask.Flask(__name__)
 
     if settings.get("DEBUG", False) or os.environ.get("DEBUG", False):
         app.config.from_object("config.DevelopmentConfig")
-    else: 
+    else:
         app.config.from_object("config.ProductionConfig")
 
     app.config.from_mapping(settings)
@@ -65,6 +65,6 @@ def create_app(settings=None):
     app.register_blueprint(api_blueprint)
     app.register_blueprint(msgs_blueprint)
 
-    from client.transactions import tasks 
+    from client.transactions import tasks
 
     return app

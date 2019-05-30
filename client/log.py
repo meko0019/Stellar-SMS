@@ -1,3 +1,3 @@
 import logging
 
-c_logger = logging.getLogger('client')
+c_logger = logging.getLogger("client")

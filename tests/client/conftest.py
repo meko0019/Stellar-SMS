@@ -46,9 +46,3 @@ def db_session(db, request):
 
     request.addfinalizer(teardown)
     return session
-
-
-
-
-
-
