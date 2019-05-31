@@ -13,13 +13,14 @@ msgs_blueprint = Blueprint("messages", __name__, url_prefix="/api/messages")
 
 @msgs_blueprint.route("/sms", methods=["GET", "POST"])
 def incoming_sms():
-    # resp_body = sms_handler(request.values)
-    # # Start our TwiML response
-    # resp = MessagingResponse()
+    try:
+        message = request.values.to_dict()
+        log.debug(message)
+        resp_body = sms_handler(request.values)    
+    except Exception as e:
+        log.error(e)
+        pass
 
-    # resp.message(resp_body)
-    message = request.values.to_dict()
-    log.debug(message)
     return str(MessagingResponse())
 
 

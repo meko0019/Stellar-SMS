@@ -1,7 +1,7 @@
 import os
 
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres@postgres:5432/postgres")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432/stellar")
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6479/0")
 AMQP_URL = os.environ.get("AMQP_URL", "amqp://localhost:5672")
 

@@ -20,18 +20,19 @@ def process_tx(phone_number):
 
 
 @celery.task
-def create_tx(from_, to, amount, currency, action='send'):
-	if not currency:
-		currency = 'XLM'
-	conn = redis.Redis.from_url(os.environ.get("REDIS_URL", "redis://localhost:6479/0"))
-	tx_key = "tx:" + from_
-	tx = {"from": from_, "to": to, "amount": amount, "currency": currency}
-	conn.hmset(tx_key, tx)
-	tx_summary(from_, to, amount, currency)
+def create_tx(from_, to, amount, currency, action="send"):
+    if not currency:
+        currency = "XLM"
+    conn = redis.Redis.from_url(os.environ.get("REDIS_URL", "redis://localhost:6479/0"))
+    tx_key = "tx:" + from_
+    tx = {"from": from_, "to": to, "amount": amount, "currency": currency}
+    conn.hmset(tx_key, tx)
+    tx_summary(from_, to, amount, currency)
+
 
 def tx_summary(from_, to, amount, currency="XLM"):
-	reply = "your one time password" if otp_required(from_) else "Y or Yes"
-	return "Here's your transaction summary: \nAmount: {} \nTo: {} {}. \nPlease reply with {}".format(
-	    amount, to, currency, reply
-	)
-	#TODO: send sms
+    reply = "your one time password" if otp_required(from_) else "Y or Yes"
+    return "Here's your transaction summary: \nAmount: {} \nTo: {} {}. \nPlease reply with {}".format(
+        amount, to, currency, reply
+    )
+    # TODO: send sms

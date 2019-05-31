@@ -20,7 +20,7 @@ def sms_handler(message):
             process_tx.delay(from_)
             return "Your transaction has been submitted."
         return "Your transaction has been canceled."
-    
+
     sms_parser(from_, body)
 
 
@@ -29,8 +29,12 @@ def sms_parser(from_, sms):
     if not match:
         return "Invalid transaction. Please try again."
     if len(match.group(2)) == 56:  # stellar address (public key)
-        create_tx.delay(from_=from_, to=match.group(2), amount=match.group(3), currency=match.group(4))
-        return ''
+        create_tx.delay(
+            from_=from_,
+            to=match.group(2),
+            amount=match.group(3),
+            currency=match.group(4),
+        )
+        return ""
     return "Invalid address. Please try again."
     # TODO: handle federation addresses
-
