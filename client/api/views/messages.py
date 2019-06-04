@@ -16,7 +16,7 @@ def incoming_sms():
     try:
         message = request.values.to_dict()
         log.debug(message)
-        resp_body = sms_handler(request.values)    
+        resp_body = sms_handler(request.values)
     except Exception as e:
         log.error(e)
         pass
