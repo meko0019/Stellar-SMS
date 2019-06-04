@@ -28,6 +28,8 @@ def create_session():
 	pass
 
 def add_tx_to_session(conn, tx):
+	tx_id = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
+	tx['tx_id'] = tx_id
 	pass
 
 def retrieve_tx_from_session(conn, tx):

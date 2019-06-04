@@ -1,6 +1,7 @@
 import shutil
 import tempfile
 
+import redis
 import pytest
 
 from client import database
@@ -46,3 +47,13 @@ def db_session(db, request):
 
     request.addfinalizer(teardown)
     return session
+
+
+@pytest.fixture(scope="function")
+def conn(db):
+    conn = redis.Redis.from_url(os.environ.get("REDIS_URL", "redis://localhost:6379/0"))
+    conn.flushall()
+    return conn 
+
+
+
