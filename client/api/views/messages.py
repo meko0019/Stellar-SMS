@@ -19,8 +19,6 @@ def incoming_sms():
         resp_body = sms_handler(request.values)
     except Exception as e:
         log.error(e)
-        pass
-
     return str(MessagingResponse())
 
 

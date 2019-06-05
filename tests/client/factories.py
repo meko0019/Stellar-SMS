@@ -34,7 +34,7 @@ class UserFactory(BaseModelFactory):
     email_address = factory.Faker("email")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    phone_number = factory.Faker("phone_number")
+    phone_number = factory.Faker("phone_number").generate().split('x')[0]
 
 
 class PaymentFactory(BaseModelFactory):
