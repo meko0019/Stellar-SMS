@@ -3,6 +3,7 @@ import os
 import redis
 from client.factory import celery
 from client.transactions.utils import otp_required
+from client.transactions.models import Payment
 
 celery.conf.beat_schedule = {
     "process_tx": {"task": "tasks.process_tx", "schedule": 30.0}

@@ -9,7 +9,7 @@ import factory.fuzzy
 
 from client.messages.models import Message
 from client.users.models import User
-
+from client.transactions.models import Payment
 
 class BaseModelFactory(factory.Factory):
     class Meta:
@@ -34,6 +34,17 @@ class UserFactory(BaseModelFactory):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     phone_number = factory.Faker("phone_number")
+
+class PaymentFactory(BaseModelFactory):
+    class Meta:
+        model = Payment
+
+    time_created = factory.fuzzy.FuzzyDateTime(datetime.datetime(2018, 1, 1, tzinfo=UTC))
+    destination = factory.fuzzy.FuzzyText(length=64)
+    amount = factory.fuzzy.FuzzyInteger(1000)
+    asset = factory.fuzzy.FuzzyText(length=16)
+    fee = 100
+    status = 'pending'
 
 
 def create_sms(body):
