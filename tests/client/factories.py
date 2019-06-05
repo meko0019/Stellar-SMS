@@ -11,6 +11,7 @@ from client.messages.models import Message
 from client.users.models import User
 from client.transactions.models import Payment
 
+
 class BaseModelFactory(factory.Factory):
     class Meta:
         abstract = True
@@ -35,16 +36,33 @@ class UserFactory(BaseModelFactory):
     last_name = factory.Faker("last_name")
     phone_number = factory.Faker("phone_number")
 
+
 class PaymentFactory(BaseModelFactory):
     class Meta:
         model = Payment
 
-    time_created = factory.fuzzy.FuzzyDateTime(datetime.datetime(2018, 1, 1, tzinfo=UTC))
+    time_created = factory.fuzzy.FuzzyDateTime(
+        datetime.datetime(2018, 1, 1, tzinfo=UTC)
+    )
     destination = factory.fuzzy.FuzzyText(length=64)
     amount = factory.fuzzy.FuzzyInteger(1000)
     asset = factory.fuzzy.FuzzyText(length=16)
     fee = 100
-    status = 'pending'
+    status = "pending"
+
+
+def create_tx():
+    from_ = factory.Faker("phone_number").generate().split('x')[0]
+    tx_key = "tx:" + from_
+    return (
+        tx_key,
+        {
+            "from": from_,
+            "to": generate_stellar_address(),
+            "amount": random.randint(1, 1000),
+            "currency": "XLM",
+        },
+    )
 
 
 def create_sms(body):
@@ -96,7 +114,7 @@ def create_sms(body):
                             random.choices(string.ascii_letters + string.digits, k=34)
                         ),
                     ),
-                    ("From", factory.Faker("phone_number").generate()),
+                    ("From", factory.Faker("phone_number").generate().split('x')[0]),
                     ("ApiVersion", "2010-04-01"),
                 ]
             ),

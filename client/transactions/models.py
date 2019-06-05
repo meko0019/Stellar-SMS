@@ -12,12 +12,14 @@ class Payment(BaseModel):
     amount = db.Column(db.String(16), nullable=False)
     asset = db.Column(db.String(16), index=True)
     fee = db.Column(db.String(16), nullable=False)
-    status = db.Column(db.String(16), default='pending')
+    status = db.Column(db.String(16), default="pending")
     user_id = db.Column(db.Integer, ForeignKey("users.id"), index=True)
     sender = relationship("User")
 
     def __repr__(self):
-        return "<Payment {} from: {} to: {}>".format(self.id, self.sender.username, self.destination)
+        return "<Payment {} from: {} to: {}>".format(
+            self.id, self.sender.username, self.destination
+        )
 
     def __json__(self):
         json = super().__json__()

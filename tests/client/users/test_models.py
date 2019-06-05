@@ -11,17 +11,15 @@ def test_create_user(db_session):
     len(query) == 1
     assert query[0] == user
 
+
 def test_password_hash(db_session):
-	user = UserFactory()
-	user.set_password('Thisisatestpassword!')
-	db_session.add(user)
-	db_session.commit()
-	query = db_session.query(User).all()
-	assert user == query[0]
+    user = UserFactory()
+    user.set_password("Thisisatestpassword!")
+    db_session.add(user)
+    db_session.commit()
+    query = db_session.query(User).all()
+    assert user == query[0]
 
-	user = query[0]
-	assert user.password_hash != 'Thisisatestpassword!'
-	assert user.check_password('Thisisatestpassword!')
-
-
-
+    user = query[0]
+    assert user.password_hash != "Thisisatestpassword!"
+    assert user.check_password("Thisisatestpassword!")
