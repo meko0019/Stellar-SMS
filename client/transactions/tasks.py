@@ -4,27 +4,23 @@ import redis
 from client.factory import celery
 from client.transactions.utils import otp_required
 from client.transactions.models import Payment
-
-celery.conf.beat_schedule = {
-    "process_tx": {"task": "tasks.process_tx", "schedule": 30.0}
-}
-
-
-@celery.task
-def send_payment(tx):
-    pass
-
+from client.stellar.utils import send_payment
+from config import REDIS_URL
 
 @celery.task
 def process_tx(phone_number):
-    pass
-
+	conn = redis.Redis.from_url(REDIS_URL)
+	tx_key = "tx:" + from_
+	tx = conn.hgetall(tx_key)
+	user = User.query.filter_by(phone_number=tx.get('from')).first()
+	sender_seed = user.keypair_seed
+	send_payment(sender_seed, tx)
 
 @celery.task
 def create_tx(from_, to, amount, currency, action="send"):
-    if not currency:
+    if currency is None:
         currency = "XLM"
-    conn = redis.Redis.from_url(os.environ.get("REDIS_URL", "redis://localhost:6479/0"))
+    conn = redis.Redis.from_url(REDIS_URL)
     tx_key = "tx:" + from_
     tx = {"from": from_, "to": to, "amount": amount, "currency": currency}
     conn.hmset(tx_key, tx)

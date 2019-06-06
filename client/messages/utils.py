@@ -21,7 +21,7 @@ def sms_handler(message):
             return "Your transaction has been submitted."
         return "Your transaction has been canceled."
 
-    sms_parser(from_, body)
+    return sms_parser(from_, body)
 
 
 def sms_parser(from_, sms):
@@ -36,5 +36,18 @@ def sms_parser(from_, sms):
             currency=match.group(4),
         )
         return ""
+    address = address_lookup(match.group(2))
+    if address:
+        create_tx.delay(
+            from_=from_,
+            to=address,
+            amount=match.group(3),
+            currency=match.group(4),
+        )
+        return ""
     return "Invalid address. Please try again."
     # TODO: handle federation addresses
+
+def address_lookup(name):
+    pass
+

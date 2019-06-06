@@ -1,16 +1,16 @@
 import os
 
 import redis
+from stellar_base.builder import Builder
 
 from client.users.models import User
 from client.users import UserDoesNotExistError
+from config import REDIS_URL
 
 
 def tx_pending(phone_num, conn=None):
     if conn is None:
-        conn = redis.Redis.from_url(
-            os.environ.get("REDIS_URL", "redis://localhost:6379/0")
-        )
+        conn = redis.Redis.from_url(REDIS_URL)
     if conn.exists("tx:" + phone_num):
         return True
     return False

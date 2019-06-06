@@ -19,7 +19,10 @@ def incoming_sms():
         resp_body = sms_handler(request.values)
     except Exception as e:
         log.error(e)
-    return str(MessagingResponse())
+        return str(MessagingResponse())
+    resp = MessagingResponse()
+    resp.message(resp_body)
+    return str(resp)
 
 
 @msgs_blueprint.route("/", methods=["POST"])

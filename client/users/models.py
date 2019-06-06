@@ -1,5 +1,6 @@
 import re
 
+from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import validates
 from client.database import db, BaseModel, UTCNOW, isofmt_date
@@ -15,6 +16,8 @@ class User(BaseModel):
     joined = db.Column(db.Date(), server_default=UTCNOW(), index=True)
     password_hash = db.Column(db.String(128))
     password_required = db.Column(db.Boolean(), server_default="false")
+    keypair_seed = db.Column(db.String(128), server_default='Null')
+
 
     @validates("email_address")
     def validate_email(self, key, email):
@@ -31,6 +34,11 @@ class User(BaseModel):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    @validates("keypair_seed")
+    def validate_keypair(self, key, kp_hash):
+        if self.keypair_seed != 'Null':
+            raise AssertionError("keypair can only be generated once.")
 
     def __repr__(self):
         return "<User {}>".format(self.username)

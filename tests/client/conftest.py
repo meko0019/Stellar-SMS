@@ -8,6 +8,7 @@ import pytest
 from client import database
 from client.database.utils import delete_all_rows
 from client.factory import create_app
+from config import REDIS_URL
 
 
 @pytest.yield_fixture(scope="session")
@@ -51,7 +52,7 @@ def db_session(db, request):
 
 
 @pytest.fixture(scope="function")
-def conn(db):
-    conn = redis.Redis.from_url(os.environ.get("REDIS_URL", "redis://localhost:6379/0"))
+def conn():
+    conn = redis.Redis.from_url(REDIS_URL)
     yield conn
     conn.flushall()

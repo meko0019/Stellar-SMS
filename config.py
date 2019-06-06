@@ -2,7 +2,7 @@ import os
 
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432/stellar")
-REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6479/0")
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
 AMQP_URL = os.environ.get("AMQP_URL", "amqp://localhost:5672")
 
 class BaseConfig(object):
@@ -26,6 +26,6 @@ class ProductionConfig(BaseConfig):
     DEBUG = False
     TESTING = False
 
-    SECRET_KEY = os.environ.get("SECRET_KEY", None)
+    SECRET_KEY = os.environ.get("SECRET_KEY", "not-a-secret-key")
 
     SESSION_COOKIE_SECURE = True
