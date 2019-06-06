@@ -63,13 +63,17 @@ class User(BaseModel):
 
 
 
-class Alias(BaseModel):
-    __tablename__ = "alias"
-    username = db.Column(db.String(64), index=True, nullable=False, unique=True)
+class Address(BaseModel):
+    """
+    Address book mapping of stellar addresses to usernames
+    """
+    __tablename__ = "addresses"
+    username = db.Column(db.String(64), index=True, nullable=False)
     address = db.Column(db.String(128), index=True, nullable=False, unique=True)
     user_id = db.Column(db.Integer, ForeignKey("users.id"))
-    user = relationship("User")
+    user = relationship("User", back_populates="addresses")
 
+    #TODO: add username+user constraint so that usernames are unique for each user's "address space"
     @validates("address")
     def validate_email(self, key, address):
         if not address:
