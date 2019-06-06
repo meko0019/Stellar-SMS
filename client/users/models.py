@@ -6,7 +6,44 @@ from sqlalchemy.orm import validates, relationship
 from sqlalchemy import ForeignKey
 
 from client.database import db, BaseModel, UTCNOW, isofmt_date
+from client.messages.models import Message
 
+
+class Address(BaseModel):
+    """
+    Address book mapping of stellar addresses to usernames
+    """
+    __tablename__ = "addresses"
+    username = db.Column(db.String(64), index=True, nullable=False)
+    address = db.Column(db.String(128), index=True, nullable=False, unique=True)
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
+    user = relationship("User", back_populates="addresses")
+
+    #TODO: add username+user constraint so that usernames are unique for each user's "address space"
+    @validates("address")
+    def validate_email(self, key, address):
+        if not address:
+            return
+
+        if len(address) != 56:
+            raise AssertionError("Invalid stellar address.")
+
+        return address
+
+
+    def __repr__(self):
+        return "<Alias {}>".format(self.username)
+
+    def __json__(self):
+        json = super().__json__()
+        json.update(
+            {
+                "username": self.username,
+                "address": self.address,
+                "user_link": self.user.username,
+            }
+        )
+        return json
 
 class User(BaseModel):
     __tablename__ = "users"
@@ -19,7 +56,8 @@ class User(BaseModel):
     password_hash = db.Column(db.String(128))
     password_required = db.Column(db.Boolean(), server_default="false")
     keypair_seed = db.Column(db.String(128), server_default='Null')
-
+    addresses = relationship("Address", order_by=Address.id, back_populates="user")
+    messages = relationship("Message", order_by=Message.id, back_populates="user")
 
     @validates("email_address")
     def validate_email(self, key, email):
@@ -62,42 +100,6 @@ class User(BaseModel):
         return json
 
 
-
-class Address(BaseModel):
-    """
-    Address book mapping of stellar addresses to usernames
-    """
-    __tablename__ = "addresses"
-    username = db.Column(db.String(64), index=True, nullable=False)
-    address = db.Column(db.String(128), index=True, nullable=False, unique=True)
-    user_id = db.Column(db.Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="addresses")
-
-    #TODO: add username+user constraint so that usernames are unique for each user's "address space"
-    @validates("address")
-    def validate_email(self, key, address):
-        if not address:
-            return
-
-        if len(address) != 56:
-            raise AssertionError("Invalid stellar address.")
-
-        return address
-
-
-    def __repr__(self):
-        return "<Alias {}>".format(self.username)
-
-    def __json__(self):
-        json = super().__json__()
-        json.update(
-            {
-                "username": self.username,
-                "address": self.address,
-                "user_link": self.user.username,
-            }
-        )
-        return json
 
 
 

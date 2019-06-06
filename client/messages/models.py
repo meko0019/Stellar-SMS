@@ -10,7 +10,7 @@ class Message(BaseModel):
     msg_id = db.Column(db.String(64), index=True, nullable=False, unique=True)
     body = db.Column(db.String(128), index=True)
     user_id = db.Column(db.Integer, ForeignKey("users.id"))
-    sender = relationship("User", back_populates="messages")
+    user = relationship("User", back_populates="messages")
     unread = db.Column(db.Boolean(), server_default="true")
     time_created = db.Column(db.Date(), server_default=UTCNOW(), index=True)
     recieved_at = db.Column(db.Date(), index=True)
