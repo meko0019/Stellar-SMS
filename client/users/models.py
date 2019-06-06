@@ -2,7 +2,9 @@ import re
 
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
+from sqlalchemy import ForeignKey
+
 from client.database import db, BaseModel, UTCNOW, isofmt_date
 
 
@@ -36,9 +38,12 @@ class User(BaseModel):
         return check_password_hash(self.password_hash, password)
 
     @validates("keypair_seed")
-    def validate_keypair(self, key, kp_hash):
+    def validate_keypair(self, key, kp_seed):
+        if not kp_seed:
+            return
         if self.keypair_seed != 'Null':
             raise AssertionError("keypair can only be generated once.")
+        return kp_seed
 
     def __repr__(self):
         return "<User {}>".format(self.username)
@@ -55,3 +60,44 @@ class User(BaseModel):
             }
         )
         return json
+
+
+
+class Alias(BaseModel):
+    __tablename__ = "alias"
+    username = db.Column(db.String(64), index=True, nullable=False, unique=True)
+    address = db.Column(db.String(128), index=True, nullable=False, unique=True)
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
+    user = relationship("User")
+
+    @validates("address")
+    def validate_email(self, key, address):
+        if not address:
+            return
+
+        if len(address) != 56:
+            raise AssertionError("Invalid stellar address.")
+
+        return address
+
+
+    def __repr__(self):
+        return "<Alias {}>".format(self.username)
+
+    def __json__(self):
+        json = super().__json__()
+        json.update(
+            {
+                "username": self.username,
+                "address": self.address,
+                "user_link": self.user.username,
+            }
+        )
+        return json
+
+
+
+
+
+
+
