@@ -8,7 +8,7 @@ from werkzeug.datastructures import CombinedMultiDict, ImmutableMultiDict
 import factory.fuzzy
 
 from client.messages.models import Message
-from client.users.models import User
+from client.users.models import User, Address
 from client.transactions.models import Payment
 
 
@@ -34,7 +34,7 @@ class UserFactory(BaseModelFactory):
     email_address = factory.Faker("email")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    phone_number = factory.Faker("phone_number").generate().split('x')[0]
+    phone_number = factory.Faker("phone_number").generate().split("x")[0]
 
 
 class PaymentFactory(BaseModelFactory):
@@ -51,8 +51,18 @@ class PaymentFactory(BaseModelFactory):
     status = "pending"
 
 
+class AddressFactory(BaseModelFactory):
+    class Meta:
+        model = Address
+
+    username = factory.Sequence(lambda n: "user%d" % n)
+    address = factory.fuzzy.FuzzyText(
+        length=56, chars=string.ascii_letters + string.digits
+    )
+
+
 def create_tx():
-    from_ = factory.Faker("phone_number").generate().split('x')[0]
+    from_ = factory.Faker("phone_number").generate().split("x")[0]
     tx_key = "tx:" + from_
     return (
         tx_key,
@@ -114,7 +124,7 @@ def create_sms(body):
                             random.choices(string.ascii_letters + string.digits, k=34)
                         ),
                     ),
-                    ("From", factory.Faker("phone_number").generate().split('x')[0]),
+                    ("From", factory.Faker("phone_number").generate().split("x")[0]),
                     ("ApiVersion", "2010-04-01"),
                 ]
             ),

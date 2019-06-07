@@ -13,15 +13,16 @@ class Address(BaseModel):
     """
     Address book mapping of stellar addresses to usernames
     """
+
     __tablename__ = "addresses"
     username = db.Column(db.String(64), index=True, nullable=False)
     address = db.Column(db.String(128), index=True, nullable=False, unique=True)
     user_id = db.Column(db.Integer, ForeignKey("users.id"))
     user = relationship("User", back_populates="addresses")
 
-    #TODO: add username+user constraint so that usernames are unique for each user's "address space"
+    # TODO: add username+user constraint so that usernames are unique in each user's "address space"
     @validates("address")
-    def validate_email(self, key, address):
+    def validate_address(self, key, address):
         if not address:
             return
 
@@ -29,7 +30,6 @@ class Address(BaseModel):
             raise AssertionError("Invalid stellar address.")
 
         return address
-
 
     def __repr__(self):
         return "<Alias {}>".format(self.username)
@@ -45,6 +45,7 @@ class Address(BaseModel):
         )
         return json
 
+
 class User(BaseModel):
     __tablename__ = "users"
     username = db.Column(db.String(64), index=True, nullable=False, unique=True)
@@ -55,7 +56,7 @@ class User(BaseModel):
     joined = db.Column(db.Date(), server_default=UTCNOW(), index=True)
     password_hash = db.Column(db.String(128))
     password_required = db.Column(db.Boolean(), server_default="false")
-    keypair_seed = db.Column(db.String(128), server_default='Null')
+    keypair_seed = db.Column(db.String(128), server_default="Null")
     addresses = relationship("Address", order_by=Address.id, back_populates="user")
     messages = relationship("Message", order_by=Message.id, back_populates="user")
 
@@ -79,7 +80,7 @@ class User(BaseModel):
     def validate_keypair(self, key, kp_seed):
         if not kp_seed:
             return
-        if self.keypair_seed != 'Null':
+        if self.keypair_seed != "Null":
             raise AssertionError("keypair can only be generated once.")
         return kp_seed
 
@@ -98,12 +99,3 @@ class User(BaseModel):
             }
         )
         return json
-
-
-
-
-
-
-
-
-

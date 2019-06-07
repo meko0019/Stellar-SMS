@@ -1,5 +1,7 @@
 import re
 
+from client.database import db
+from client.users.models import User, Address
 from client.transactions.tasks import process_tx, create_tx
 from client.transactions.utils import tx_pending, otp_required, check_otp
 
@@ -36,18 +38,24 @@ def sms_parser(from_, sms):
             currency=match.group(4),
         )
         return ""
-    address = address_lookup(match.group(2))
+    address = address_lookup(from_, match.group(2))
     if address:
         create_tx.delay(
-            from_=from_,
-            to=address,
-            amount=match.group(3),
-            currency=match.group(4),
+            from_=from_, to=address, amount=match.group(3), currency=match.group(4)
         )
         return ""
     return "Invalid address. Please try again."
     # TODO: handle federation addresses
 
-def address_lookup(name):
-    pass
 
+def address_lookup(from_, username):
+    try:
+        user, address = (
+            db.session.query(User, Address)
+            .filter(User.id == Address.user_id)
+            .filter(Address.username == username)
+            .first()
+        )
+        return address.address
+    except Exception as e:
+        return None

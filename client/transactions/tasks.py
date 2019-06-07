@@ -7,14 +7,16 @@ from client.transactions.models import Payment
 from client.stellar.utils import send_payment
 from config import REDIS_URL
 
+
 @celery.task
 def process_tx(phone_number):
-	conn = redis.Redis.from_url(REDIS_URL)
-	tx_key = "tx:" + from_
-	tx = conn.hgetall(tx_key)
-	user = User.query.filter_by(phone_number=tx.get('from')).first()
-	sender_seed = user.keypair_seed
-	send_payment(sender_seed, tx)
+    conn = redis.Redis.from_url(REDIS_URL)
+    tx_key = "tx:" + from_
+    tx = conn.hgetall(tx_key)
+    user = User.query.filter_by(phone_number=tx.get("from")).first()
+    sender_seed = user.keypair_seed
+    send_payment(sender_seed, tx)
+
 
 @celery.task
 def create_tx(from_, to, amount, currency, action="send"):

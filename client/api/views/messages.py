@@ -23,11 +23,3 @@ def incoming_sms():
     resp = MessagingResponse()
     resp.message(resp_body)
     return str(resp)
-
-
-@msgs_blueprint.route("/", methods=["POST"])
-def create_msg():
-    message = json.loads(request.data)
-    db.session.add(message)
-    db.session.commit()
-    return str(message.__json__())
