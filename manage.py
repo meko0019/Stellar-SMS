@@ -6,9 +6,10 @@ from flask_script import Manager
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
+
 def main():
     command = sys.argv[1]
-    if command == 'db':
+    if command == "db":
 
         from client.database import db
         from client.factory import create_app
@@ -32,9 +33,7 @@ def main():
     else:
 
         if command == "shell":
-            return system(
-                "docker-compose build web && docker-compose run --rm web sh"
-            )
+            return system("docker-compose build web && docker-compose run --rm web sh")
 
         if command == "up":
             return system("docker-compose build web && docker-compose up")

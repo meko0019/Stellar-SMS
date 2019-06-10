@@ -29,13 +29,13 @@ def sms_handler(message):
 
 
 def sms_parser(from_, sms):
-    log.debug(f'Parsing sms - {sms}')
+    log.debug(f"Parsing sms - {sms}")
     match = SEND_PATTERN.match(sms)
     if not match:
-        log.debug('sms does not match send pattern regex.')
+        log.debug("sms does not match send pattern regex.")
         return "Invalid transaction. Please try again."
     if len(match.group(2)) == 56:  # stellar address (public key)
-        log.debug('sms contains a Stellar address.')
+        log.debug("sms contains a Stellar address.")
         create_tx.delay(
             from_=from_,
             to=match.group(2),
@@ -45,7 +45,7 @@ def sms_parser(from_, sms):
         return ""
     address = address_lookup(from_, match.group(2))
     if address:
-        log.debug('Address lookup successful.')
+        log.debug("Address lookup successful.")
         create_tx.delay(
             from_=from_, to=address, amount=match.group(3), currency=match.group(4)
         )
@@ -64,5 +64,5 @@ def address_lookup(from_, username):
         )
         return address.address
     except Exception as e:
-        log.debug(f'error during address lookup - {e}')
+        log.debug(f"error during address lookup - {e}")
         return None
