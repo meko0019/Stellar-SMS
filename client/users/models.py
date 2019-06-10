@@ -21,6 +21,16 @@ class Address(BaseModel):
     user = relationship("User", back_populates="addresses")
 
     # TODO: add username+user constraint so that usernames are unique in each user's "address space"
+    @validates("username")
+    def normalize_username(self, key, username):
+        """
+        normalizes username to all lowercase to simplify querying
+        """
+        if not username:
+            return
+
+        return username.strip().lower()
+
     @validates("address")
     def validate_address(self, key, address):
         if not address:

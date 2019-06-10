@@ -29,10 +29,11 @@ def test_integration(client, db_session, conn):
     data['From'] = alice.phone_number
     res = client.post(url_for("messages.incoming_sms"), data=data)
     assert res.status_code == 200
-    time.sleep(0.3)
-    assert conn.hgetall("tx:" + alice.phone_number) == {
+    #wait for tasks to finish
+    time.sleep(0.5)
+    assert {key.decode('utf-8'):val.decode('utf-8') for key, val in conn.hgetall("tx:" + alice.phone_number).items()}.items() == {
         "from": alice.phone_number,
         "to": bob.address,
         "amount": "10",
         "currency": "XLM",
-    }
+    }.items()

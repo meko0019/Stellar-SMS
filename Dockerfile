@@ -13,6 +13,7 @@ RUN apk update && \
 	    git \
 	    gcc \
 	    musl-dev \
+	    yaml-dev \
 	    postgresql-dev \
 	    postgresql-client &&\
 	pip install --upgrade pip &&\ 
