@@ -25,7 +25,7 @@ class Payment(BaseModel):
         json = super().__json__()
         json.update(
             {
-                "time_created id": isofmt_date(self.time_created),
+                "time_created": isofmt_date(self.time_created),
                 "destination": self.destination,
                 "sender": self.sender.username,
                 "amount": self.amount,

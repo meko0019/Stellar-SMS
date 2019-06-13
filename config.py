@@ -22,6 +22,7 @@ class BaseConfig(object):
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
+    CELERY_TASK_ALWAYS_EAGER = True
 
     SECRET_KEY = "not-a-secret-key"
 

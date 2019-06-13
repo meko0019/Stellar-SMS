@@ -38,7 +38,7 @@ def test_sms_parser(sms_body, expected, mocker):
     assert sms_parser(factory.Faker("phone_number").generate(), sms_body) == expected
 
 
-def test_sms_handler_pending_tx(mocker):
+def test_sms_handler_pending_tx(db_session, mocker):
     """
 	exhaustive test of sms_handler 
 	"""
@@ -64,7 +64,7 @@ def test_sms_handler_pending_tx(mocker):
     client.transactions.tasks.process_tx.delay.assert_called_with(message.get("From"))
 
 
-def test_sms_handler_new_tx(mocker):
+def test_sms_handler_new_tx(db_session, mocker):
     mocker.patch("client.messages.utils.tx_pending", lambda phone_number: None)
     mocker.patch("client.messages.utils.sms_parser")
     message = create_sms(("send " + gsa() + " 10 xlm"))

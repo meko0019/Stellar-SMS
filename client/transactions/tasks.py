@@ -1,11 +1,13 @@
 import os
 
 import redis
+
 from client.factory import celery
 from client.log import c_logger as log
 from client.transactions.utils import otp_required
 from client.transactions.models import Payment
 from client.stellar.utils import send_payment
+from client.users.models import User
 from config import REDIS_URL
 
 
@@ -22,6 +24,9 @@ def process_tx(phone_number):
 @celery.task
 def create_tx(from_, to, amount, currency, action="send"):
     log.debug("Creating transaction.")
+    if User.query.filter_by(phone_number=from_).first() is None:
+        log.error("User does not exist.")
+        return
     if currency is None or currency == "":
         currency = "XLM"
     conn = redis.Redis.from_url(REDIS_URL)

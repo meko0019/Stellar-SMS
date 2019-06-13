@@ -3,6 +3,7 @@ import time
 import requests
 from flask import url_for
 
+from client.factory import celery
 from tests.client.factories import create_sms, UserFactory, AddressFactory
 
 
@@ -23,8 +24,10 @@ def populate_db(db):
 
 
 def test_integration(client, db_session, conn):
+    celery.conf.update({"task_always_eager": True})
     conn.flushall()  # flush redis db
     alice, bob = populate_db(db_session)
+    time.sleep(0.5)
     data = create_sms("send bob 10").to_dict()
     data["From"] = alice.phone_number
     res = client.post(url_for("messages.incoming_sms"), data=data)

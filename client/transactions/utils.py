@@ -1,4 +1,6 @@
 import os
+import uuid
+import math
 
 import redis
 from stellar_base.builder import Builder
@@ -28,3 +30,51 @@ def otp_required(phone_num):
     if user is None:
         raise UserDoesNotExistError("user does not exists.")
     return user.password_required
+
+
+def acquire_lock(conn, lockname, acquire_timeout=10, lock_timeout=10):
+
+    identifier = str(uuid.uuid4())  # A 128-bit random identifier.
+
+    lock_timeout = int(math.ceil(lock_timeout))
+
+    end = time.time() + acquire_timeout
+    while time.time() < end:
+        # Get the lock and set the expiration.
+        if conn.setnx(lockname, identifier):
+            conn.expire(lockname, lock_timeout)
+
+            return identifier
+        elif not conn.ttl(lockname):
+            conn.expire(lockname, lock_timeout)
+
+        time.sleep(0.001)
+
+    return False
+
+
+def release_lock(conn, lockname, identifier):
+    pipe = conn.pipeline(True)
+    lockname = "lock:" + lockname
+
+    while True:
+        try:
+            pipe.watch(lockname)
+            # Check and verify that we still have the lock.
+            if pipe.get(lockname) == identifier:
+
+                pipe.multi()
+                pipe.delete(lockname)
+                pipe.execute()
+                return True
+
+            # Release the lock.
+            pipe.unwatch()
+            break
+
+        except redis.exceptions.WatchError:
+            pass
+
+    # Someone else did something with the lock; retry.
+
+    return False
