@@ -12,18 +12,20 @@ from config import REDIS_URL
 
 
 @celery.task
-def process_tx(phone_number):
+def process_tx(from_):
+    log.debug("Processing transaction..")
     conn = redis.Redis.from_url(REDIS_URL)
     tx_key = "tx:" + from_
     tx = conn.hgetall(tx_key)
-    user = User.query.filter_by(phone_number=tx.get("from")).first()
+    user = User.query.filter_by(phone_number=tx.get(b"from").decode("utf-8")).first()
     sender_seed = user.keypair_seed
     send_payment(sender_seed, tx)
+    log.debug("Transaction has been submitted to the network.")
 
 
 @celery.task
 def create_tx(from_, to, amount, currency, action="send"):
-    log.debug("Creating transaction.")
+    log.debug("Creating transaction..")
     if User.query.filter_by(phone_number=from_).first() is None:
         log.error("User does not exist.")
         return
@@ -39,13 +41,12 @@ def create_tx(from_, to, amount, currency, action="send"):
     }
     conn.hmset(tx_key, tx)
     log.debug(f"Created transaction with key {tx_key} and tx {tx}.")
-    tx_summary(from_, to, amount, currency)
+    return tx_summary(from_, to, amount, currency)
 
 
 def tx_summary(from_, to, amount, currency="XLM"):
-    pass
-    # reply = "your one time password" if otp_required(from_) else "Y or Yes"
-    # return "Here's your transaction summary: \nAmount: {} \nTo: {} {}. \nPlease reply with {}".format(
-    #     amount, to, currency, reply
-    # )
+    reply = "your one time password" if otp_required(from_) else "Y or Yes"
+    return "Here's your transaction summary: \nAmount: {} \nTo: {} {}. \nPlease reply with {}".format(
+        amount, to, currency, reply
+    )
     # TODO: send sms

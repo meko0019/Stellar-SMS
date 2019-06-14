@@ -9,7 +9,8 @@ from stellar_base.memo import TextMemo
 from stellar_base.horizon import horizon_testnet, horizon_livenet
 
 from client.database import db
-from client.users.models import User
+from client.log import c_logger as log
+from client.users.models import User, Address
 from client.stellar import UnknownIssuerError
 
 
@@ -23,19 +24,24 @@ def create_account(user, kp=None, seed=None):
     url = "https://friendbot.stellar.org"
     r = requests.get(url, params={"addr": publickey})
     if r.status_code == 200:
-        user.keypair_seed = kp.seed().decode()
+        if isinstance(user, User):
+            user.keypair_seed = kp.seed().decode()
+        elif isinstance(user, Address):
+            user.address = kp.seed().decode()
+        else:
+            log.warning("user must be an instance of either User or Address.")
         db.session.add(user)
         db.session.commit()
         print("Successfully created an account using Friendbot on the test network")
     else:
-        print(r.status_code, r.reason)
+        print(r.status_code, r.reason, "\n", kp.address().decode())
     return kp
 
 
 def send_payment(sender_seed, tx):
     # Generate the sender's Keypair for signing and setting as the source
     sender_kp = Keypair.from_seed(sender_seed)
-
+    tx = {key.decode("utf-8"): val.decode("utf-8") for key, val in tx.items()}
     # Address for the destination
     destination = tx.get("to")
 
@@ -65,10 +71,7 @@ def send_payment(sender_seed, tx):
     # horizon = horizon_livenet() for LIVENET
 
     # Get the current sequence of sender
-    # Python 3
     sequence = horizon.account(sender_kp.address().decode("utf-8")).get("sequence")
-    # Python 2
-    # sequence = horizon.account(sender_kp.address()).get('sequence')
 
     # Construct a transaction
     tx = Transaction(
@@ -89,3 +92,4 @@ def send_payment(sender_seed, tx):
     # Submit the transaction to Horizon!
     xdr = envelope.xdr()
     response = horizon.submit(xdr)
+    print(response)
