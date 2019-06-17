@@ -1,5 +1,5 @@
 import requests
-import time 
+import time
 
 from client.database import db
 from client.factory import celery
@@ -23,7 +23,7 @@ def populate_db():
     return user, address
 
 
-def test_live(msg="send bob 10"):
+def live(msg="send bob 10"):
     celery.conf.update({"task_always_eager": True})
     alice, bob = populate_db()
     data = create_sms(msg).to_dict()
@@ -31,5 +31,9 @@ def test_live(msg="send bob 10"):
     alice_kp = create_account(alice)
     bob_kp = create_account(bob)
     r = requests.post("http://localhost:8000/api/messages/sms", data=data)
-    time.sleep(10) #wait until tx is processed 
+    time.sleep(10)  # wait until tx is processed
     assert r.status_code == 200
+
+
+if __name__ == '__main__':
+    live()

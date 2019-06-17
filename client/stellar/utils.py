@@ -73,6 +73,8 @@ def send_payment(sender_seed, tx):
     # Get the current sequence of sender
     sequence = horizon.account(sender_kp.address().decode("utf-8")).get("sequence")
 
+    # TODO: track sequence locally for better accuracy, speed, and robustness
+
     # Construct a transaction
     tx = Transaction(
         source=sender_kp.address().decode(),
@@ -92,4 +94,9 @@ def send_payment(sender_seed, tx):
     # Submit the transaction to Horizon!
     xdr = envelope.xdr()
     response = horizon.submit(xdr)
-    print(response)
+    if response.status != 200:
+        log.error(
+            f"Submission unsuccessful. Horizon retured with error: {response.detail}"
+        )
+
+    log.debug("Transaction was successfully submitted to the network.")

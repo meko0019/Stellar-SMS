@@ -33,7 +33,7 @@ def otp_required(phone_num):
     return user.password_required
 
 
-def acquire_lock(conn, lockname, acquire_timeout=10, lock_timeout=10):
+def acquire_lock(conn, lockname, acquire_timeout=5, lock_timeout=10):
     identifier = str(uuid.uuid4())  # A 128-bit random identifier.
     lock_timeout = int(math.ceil(lock_timeout))
     end = time.time() + acquire_timeout
@@ -53,6 +53,7 @@ def acquire_lock(conn, lockname, acquire_timeout=10, lock_timeout=10):
 
 def release_lock(conn, lockname, identifier):
     pipe = conn.pipeline(True)
+    counter = 0
 
     while True:
         try:
@@ -61,16 +62,16 @@ def release_lock(conn, lockname, identifier):
             # Check and verify that we still have the lock.
             if conn.get(lockname).decode("utf-8") == identifier:
 
+                # Release the lock
                 pipe.multi()
                 pipe.delete(lockname)
                 pipe.execute()
                 return True
 
-            # Release the lock.
             pipe.unwatch()
             break
 
         except redis.exceptions.WatchError:
             pass
-        # Someone else did something with the lock; retry.
+        # Someone else did something with the lock (VERY unlikely); retry.
     return False
