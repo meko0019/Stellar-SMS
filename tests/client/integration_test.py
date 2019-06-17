@@ -34,15 +34,7 @@ def test_integration(client, db_session, conn):
     # wait for tasks to finish
     time.sleep(0.5)
     db_session.merge(alice, bob)
-    assert (
-        {
-            key.decode("utf-8"): val.decode("utf-8")
-            for key, val in conn.hgetall("tx:" + alice.phone_number).items()
-        }.items()
-        == {
-            "from": from_,
-            "to": to,
-            "amount": "10",
-            "currency": "XLM",
-        }.items()
-    )
+    assert {
+        key.decode("utf-8"): val.decode("utf-8")
+        for key, val in conn.hgetall("tx:" + alice.phone_number).items()
+    }.items() == {"from": from_, "to": to, "amount": "10", "currency": "XLM"}.items()
