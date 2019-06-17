@@ -10,6 +10,7 @@ from stellar_base.horizon import horizon_testnet, horizon_livenet
 
 from client.database import db
 from client.log import c_logger as log
+from client.transactions.models import Payment as Tx
 from client.users.models import User, Address
 from client.stellar import UnknownIssuerError
 
@@ -98,5 +99,8 @@ def send_payment(sender_seed, tx):
         log.error(
             f"Submission unsuccessful. Horizon retured with error: {response.detail}"
         )
-
+        return
     log.debug("Transaction was successfully submitted to the network.")
+    return True
+
+

@@ -12,7 +12,6 @@ class Payment(BaseModel):
     amount = db.Column(db.String(16), nullable=False)
     asset = db.Column(db.String(16), index=True)
     fee = db.Column(db.String(16), nullable=False)
-    status = db.Column(db.String(16), default="pending")
     user_id = db.Column(db.Integer, ForeignKey("users.id"), index=True)
     sender = relationship("User")
 

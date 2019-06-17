@@ -28,7 +28,7 @@ def test_integration(client, db_session, conn):
     alice, bob = populate_db(db_session)
     from_, to = alice.phone_number, bob.address
     data = create_sms("send bob 10").to_dict()
-    data["From"] = alice.phone_number
+    data["From"] = from_
     res = client.post(url_for("messages.incoming_sms"), data=data)
     assert res.status_code == 200
     # wait for tasks to finish

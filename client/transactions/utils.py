@@ -53,7 +53,6 @@ def acquire_lock(conn, lockname, acquire_timeout=5, lock_timeout=10):
 
 def release_lock(conn, lockname, identifier):
     pipe = conn.pipeline(True)
-    counter = 0
 
     while True:
         try:

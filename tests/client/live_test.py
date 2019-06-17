@@ -30,7 +30,7 @@ def live(msg="send bob 10"):
     data["From"] = alice.phone_number
     alice_kp = create_account(alice)
     bob_kp = create_account(bob)
-    r = requests.post("http://localhost:8000/api/messages/sms", data=data)
+    r = requests.post("http://web:8000/api/messages/sms", data=data)
     time.sleep(10)  # wait until tx is processed
     assert r.status_code == 200
 
