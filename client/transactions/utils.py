@@ -23,6 +23,8 @@ def check_otp(phone_num, msg):
     user = User.query.filter_by(phone_number=phone_num).first()
     if user is None:
         raise UserDoesNotExistError("user does not exists.")
+    if not user.password_required or user.password_hash is None:
+        return True
     return user.check_password(msg)
 
 

@@ -21,18 +21,22 @@ def process_tx(from_):
     user = User.query.filter_by(phone_number=tx.get(b"from").decode("utf-8")).first()
     sender_seed = user.keypair_seed
     log.debug("Transaction is ready for submission.")
-    #lock tx to ensure only 1 worker is working on the tx at a given time
-    #and watch for any changes made to the tx by a different process during submission 
-    lock = acquire_lock(conn, tx_key)
+    # lock tx to ensure only 1 worker is working on the tx at a given time
+    # and watch for any changes made to the tx by another process during submission
+    lockname = "lock:" + tx_key
+    lock = acquire_lock(conn, lockname)
+    if not lock:
+        # return if unable to get lock, i.e. if another worker process is working on the tx
+        return
     pipe = conn.pipeline(True)
-    pipe.watch(tx)
+    pipe.watch(tx_key)
     if send_payment(sender_seed, tx):
         pipe.multi()
         pipe.delete(tx_key)
         pipe.execute()
     else:
         pipe.unwatch()
-    release_lock(conn, tx_key, lock)
+    release_lock(conn, lockname, lock)
 
 
 @celery.task

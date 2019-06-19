@@ -28,7 +28,7 @@ def create_account(user, kp=None, seed=None):
         if isinstance(user, User):
             user.keypair_seed = kp.seed().decode()
         elif isinstance(user, Address):
-            user.address = kp.seed().decode()
+            user.address = kp.address().decode()
         else:
             log.warning("user must be an instance of either User or Address.")
         db.session.add(user)
@@ -95,12 +95,11 @@ def send_payment(sender_seed, tx):
     # Submit the transaction to Horizon!
     xdr = envelope.xdr()
     response = horizon.submit(xdr)
-    if response.status != 200:
+    log.debug(str(response))
+    if response.get("status") not in [None, 200]:
         log.error(
             f"Submission unsuccessful. Horizon retured with error: {response.detail}"
         )
         return
     log.debug("Transaction was successfully submitted to the network.")
     return True
-
-
