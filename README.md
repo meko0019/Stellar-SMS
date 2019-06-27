@@ -32,7 +32,7 @@ To deploy:
 ```
 $ python manage.py up
 ```
-* install and run [ngrok](https://ngrok.com/) in a separate terminal to expose your local server using the public url
+* install and run [ngrok](https://ngrok.com/) in a separate terminal to expose your local server using a public url
 
 After deploying your app:
 
