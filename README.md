@@ -19,9 +19,12 @@ To test the app:
 ```
 $ python manage.py up
 ```
-* Start a shell in the container by running :
+* In another terminal, start a shell in the container and apply db migrations:
 ```
 $ python manage.py shell
+$ python manage.py db init
+$ python manage.py db migrate
+$ python manage.py db upgrade
 ```
 * To run all tests: run ``$ pytest`` from inside the container shell 
 
