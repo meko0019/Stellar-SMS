@@ -22,7 +22,6 @@ $ python manage.py up
 * In another terminal, start a shell in the container and apply db migrations:
 ```
 $ python manage.py shell
-$ python manage.py db init
 $ python manage.py db migrate
 $ python manage.py db upgrade
 ```

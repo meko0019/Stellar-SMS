@@ -10,4 +10,6 @@ before_install:
   - docker ps -a
 
 script:
-  - docker-compose run --rm web pytest
+  - docker-compose run --name test web python manage.py db migrate
+  - docker-compose exec test python manage.py db upgrade
+  - docker-compose exec test pytest
