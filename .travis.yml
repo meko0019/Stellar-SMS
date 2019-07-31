@@ -1,0 +1,13 @@
+language: python
+
+services:
+  - docker
+
+before_install:
+  - docker-compose build web 
+  - docker-compose up -d
+  - docker ps -a
+  - docker-compose run --rm web sh
+
+script:
+  - pytest
