@@ -6,6 +6,7 @@ services:
 before_install:
   - docker --version
   - docker-compose build web 
+  - lsof -i :5432
   - docker-compose up -d
   - docker ps -a
   - docker-compose run --rm web sh
