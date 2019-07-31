@@ -26,7 +26,7 @@ $ python manage.py db init
 $ python manage.py db migrate
 $ python manage.py db upgrade
 ```
-* To run all tests: run ``$ pytest`` from inside the container shell 
+* To run all tests: ``$ pytest`` from inside the container shell 
 
 * To see a mock transaction: import and run the `tests.client.live_test.live` method in a flask shell within a container shell and verify the transaction using the logs from the docker-compose terminal. (This is actually a real transaction on the test net, a 'mock' only because it's not initiated by an actual SMS)
 
