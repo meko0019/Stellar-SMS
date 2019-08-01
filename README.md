@@ -1,5 +1,7 @@
 # Stellar SMS client
 
+[![Build Status](https://travis-ci.org/meko0019/Stellar-SMS.svg?branch=master)](https://travis-ci.org/meko0019/Stellar-SMS)
+
 This is a python implementation of sending digital assets via SMS on the stellar network. A simple http server API listens for incoming transactions and verifies (more on this below) it before submitting it to the network. If the transaction has already been submitted, horizon will simply return the saved result and not attempt to submit the transaction again, as stated in the [docs](https://www.stellar.org/developers/horizon/reference/endpoints/transactions-create.html). Further protection against multiple submissions is provided by a Redis lock on the transaction key to ensure only one worker process is working on the task.  
 **This is an experimental project. Not intended for use in production.**
 
