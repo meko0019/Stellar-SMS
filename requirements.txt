@@ -41,7 +41,7 @@ psycopg2==2.8.2
 py==1.8.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 PySocks==1.6.8
 pytest==4.4.1
 pytest-cov==2.6.1
